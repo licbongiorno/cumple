@@ -3,370 +3,445 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cockpit Financiero - Auditoría</title>
+    <title>¡Feliz Cumpleaños Cairto!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --bg: #0d0d0d;
-            --panel: #1a1a1a;
-            --text: #e0e0e0;
-            --border: #333;
-            --accent: #00e5ff;
-            --peligro: #ff3366;
-            --fragil: #ff9933;
-            --sano: #00cc66;
-            --solido: #b366ff;
-        }
-        
-        * { box-sizing: border-box; }
-        
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Consolas', 'Courier New', monospace;
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            font-size: 14px;
+            padding: 0;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
+        body {
+            background-color: #fcf8f2;
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px 10px;
         }
 
-        .header {
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            color: var(--accent);
-            font-size: 1.6rem;
-            margin: 0 0 5px 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .context-info {
-            color: #888;
-            font-size: 0.85rem;
-        }
-
-        .grid-inputs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-            background: var(--panel);
-            padding: 20px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-        }
-
-        .input-group { display: flex; flex-direction: column; }
-        
-        .input-group label {
-            font-size: 0.8rem;
-            color: #aaa;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        .input-group input {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--accent);
-            padding: 8px;
-            font-family: inherit;
-            font-size: 1rem;
-            outline: none;
-        }
-        
-        .input-group input:focus { border-color: var(--accent); }
-
-        button {
-            background: var(--accent);
-            color: #000;
+        /* --- BOTÓN DE AUDIO --- */
+        .btn-audio {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: #d45d79;
+            color: white;
             border: none;
-            padding: 12px 20px;
-            font-family: inherit;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: 'Nunito', sans-serif;
             font-weight: bold;
-            font-size: 1rem;
             cursor: pointer;
-            text-transform: uppercase;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(212, 93, 121, 0.3);
+            transition: transform 0.2s;
+        }
+        .btn-audio:hover {
+            transform: scale(1.05);
+        }
+
+        /* --- EFECTOS FLOTANTES --- */
+        .decoracion-flotante {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .globo {
+            position: absolute;
+            bottom: -150px;
+            width: 50px;
+            height: 65px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            animation: flotarArriba 12s linear infinite;
+            opacity: 0.6;
+        }
+        .globo::after {
+            content: "";
+            position: absolute;
+            bottom: -12px; left: 24px;
+            width: 2px; height: 12px;
+            background-color: #999;
+        }
+
+        .confeti {
+            position: absolute;
+            top: -20px;
+            width: 10px;
+            height: 10px;
+            animation: caer 8s linear infinite;
+        }
+
+        @keyframes flotarArriba {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); }
+            50% { transform: translateY(-60vh) translateX(30px) rotate(8deg); }
+            100% { transform: translateY(-120vh) translateX(-20px) rotate(-5deg); }
+        }
+
+        @keyframes caer {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* --- DIARIO CONTENEDOR --- */
+        .diario-contenedor {
+            background: #fffdf9;
             width: 100%;
-            transition: opacity 0.2s;
+            max-width: 500px;
+            border: 1px solid #e6dfd3;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(163, 145, 117, 0.2);
+            position: relative;
+            z-index: 10;
+            border-left: 15px solid #e0cda9;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        button:hover { opacity: 0.8; }
-
-        .dashboard {
-            display: none;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 25px;
+        .diario-contenido {
+            background-image: linear-gradient(#e1effa 1px, transparent 1px);
+            background-size: 100% 28px;
+            line-height: 28px;
+            padding: 30px 25px 15px 25px;
         }
 
-        .metric-card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            padding: 15px;
-            border-left: 4px solid var(--border);
-        }
-
-        .metric-title {
-            font-size: 0.8rem;
-            color: #888;
-            text-transform: uppercase;
+        h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 2.6rem;
+            color: #d45d79;
+            text-align: center;
+            line-height: 1.2;
             margin-bottom: 10px;
         }
 
-        .metric-value {
+        p.dedicatoria {
+            font-family: 'Caveat', cursive;
             font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 5px;
+            color: #555;
+            text-align: center;
+            margin-bottom: 15px;
         }
 
-        .metric-status {
+        /* --- PESTAÑAS / SOLAPAS --- */
+        .pestanas-navegacion {
+            display: flex;
+            background: #f5edd6;
+            border-top: 1px solid #e6dfd3;
+        }
+
+        .boton-pestana {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 12px 5px;
             font-size: 0.85rem;
             font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 3px;
-            display: inline-block;
+            color: #7a6b52;
+            cursor: pointer;
+            transition: background 0.2s;
+            outline: none;
+            text-align: center;
         }
 
-        .directivas {
-            margin-top: 30px;
-            background: #111;
-            border: 1px solid var(--peligro);
-            padding: 20px;
+        .boton-pestana:not(:last-child) {
+            border-right: 1px solid #e6dfd3;
+        }
+
+        .boton-pestana.activa {
+            background: #fffdf9;
+            color: #d45d79;
+        }
+
+        .contenido-solapa {
             display: none;
+            padding: 15px 0;
+            animation: fadeIn 0.3s ease;
         }
 
-        .directivas h3 {
-            color: var(--peligro);
-            margin-top: 0;
+        .contenido-solapa.activa {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- RASPADITA --- */
+        .instrucciones {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 10px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .directivas ul { margin: 0; padding-left: 20px; }
-        .directivas li { margin-bottom: 10px; line-height: 1.4; }
+        .contenedor-raspadita {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 0 auto;
+            user-select: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fdfbf7;
+        }
 
-        /* Status Colors */
-        .status-peligro { color: var(--peligro); background: rgba(255,51,102,0.1); }
-        .status-fragil { color: var(--fragil); background: rgba(255,153,51,0.1); }
-        .status-sano { color: var(--sano); background: rgba(0,204,102,0.1); }
-        .status-solido { color: var(--solido); background: rgba(179,102,255,0.1); }
+        .contenido-oculto {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .contenido-oculto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .link-regalo {
+            display: inline-block;
+            background: #d45d79;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transition: background 0.3s;
+        }
+
+        .link-regalo:hover {
+            background: #b54761;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0; left: 0;
+            touch-action: none;
+            cursor: pointer;
+        }
 
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>Auditoría Financiera - Nico Bongiorno</h1>
-        <div class="context-info">
-            Sistema inicializado. Monitoreo estricto del ecosistema operativo familiar (Nathalia, Isabella, Renata). <br>
-            Base: Villa Parque Santa Ana | Nodos activos: Horas clínicas, IOL, MP, Centro Teseo.
+    <!-- Audio Player -->
+    <audio id="musicaFondo" src="1.mp3" loop></audio>
+    <button id="btnAudio" class="btn-audio" onclick="toggleMúsica()">▶ Reproducir</button>
+
+    <div class="decoracion-flotante" id="decoracion"></div>
+
+    <div class="diario-contenedor">
+        <div class="diario-contenido">
+            <h1>¡Feliz Cumpleaños Cairto! 🎂</h1>
+            <p class="dedicatoria">Una bitácora pensada para vos en tu día. Navegá por las solapas de abajo para descubrir tus regalos.</p>
+            
+            <!-- CONTENIDO DE LAS SOLAPAS -->
+            
+            <!-- Solapa 1: Regalo 1 (Enlace) -->
+            <div id="solapa-regalo1" class="contenido-solapa activa">
+                <p class="instrucciones">👇 Raspá acá abajo para tu Primer Regalo 👇</p>
+                <div class="contenedor-raspadita">
+                    <div class="contenido-oculto">
+                        <a href="https://google.com/2.png" target="_blank" class="link-regalo">🎁 ¡Tocar para abrir!</a>
+                    </div>
+                    <canvas id="canvasR1" width="260" height="260"></canvas>
+                </div>
+            </div>
+
+            <!-- Solapa 2: Regalo 2 (Enlace) -->
+            <div id="solapa-regalo2" class="contenido-solapa">
+                <p class="instrucciones">👇 Raspá acá abajo para tu Segundo Regalo 👇</p>
+                <div class="contenedor-raspadita">
+                    <div class="contenido-oculto">
+                        <a href="https://google.com/3.png" target="_blank" class="link-regalo">🎁 ¡Tocar para abrir!</a>
+                    </div>
+                    <canvas id="canvasR2" width="260" height="260"></canvas>
+                </div>
+            </div>
+
+            <!-- Solapa 3: Regalo 3 (Foto) -->
+            <div id="solapa-regalo3" class="contenido-solapa">
+                <p class="instrucciones">👇 Raspá acá abajo para tu Tercer Regalo 👇</p>
+                <div class="contenedor-raspadita">
+                    <div class="contenido-oculto">
+                        <img src="1.png" alt="Regalo Sorpresa">
+                    </div>
+                    <canvas id="canvasR3" width="260" height="260"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BARRA DE SOLAPAS INFERIORES -->
+        <div class="pestanas-navegacion">
+            <button class="boton-pestana activa" onclick="cambiarSolapa(event, 'solapa-regalo1')">REGALO 1</button>
+            <button class="boton-pestana" onclick="cambiarSolapa(event, 'solapa-regalo2')">REGALO 2</button>
+            <button class="boton-pestana" onclick="cambiarSolapa(event, 'solapa-regalo3')">REGALO 3</button>
         </div>
     </div>
-
-    <div class="grid-inputs">
-        <div class="input-group">
-            <label>Ingreso Total del Mes (ARS)</label>
-            <input type="number" id="ingresoTotal" placeholder="Ej: 4500000">
-        </div>
-        <div class="input-group">
-            <label>Ingreso Mes Anterior (ARS)</label>
-            <input type="number" id="ingresoAnterior" placeholder="Ej: 4000000">
-        </div>
-        <div class="input-group">
-            <label>Ingreso Horas Clínicas (ARS)</label>
-            <input type="number" id="ingresoPrincipal" placeholder="Ej: 3000000">
-        </div>
-        <div class="input-group">
-            <label>Gastos Totales del Mes (ARS)</label>
-            <input type="number" id="gastoTotal" placeholder="Ej: 2800000">
-        </div>
-        <div class="input-group">
-            <label>Liquidez Inmediata MP (ARS)</label>
-            <input type="number" id="liquidez" placeholder="Ej: 800000">
-        </div>
-        <div class="input-group">
-            <label>Capital en IOL / Ahorros (ARS)</label>
-            <input type="number" id="iol" placeholder="Ej: 5000000">
-        </div>
-        <div class="input-group">
-            <label>Aportes a Inversión este mes (ARS)</label>
-            <input type="number" id="inversionMes" placeholder="Ej: 400000">
-        </div>
-        <div class="input-group">
-            <label>Deudas Totales (ARS)</label>
-            <input type="number" id="deudas" value="0">
-        </div>
-        <div class="input-group">
-            <label>VPN Mes Anterior (ARS)</label>
-            <input type="number" id="vpnAnterior" placeholder="Opcional">
-        </div>
-    </div>
-
-    <button onclick="ejecutarAuditoria()">Ejecutar Auditoría</button>
-
-    <div class="dashboard" id="dashboard">
-        <!-- Tarjetas de métricas generadas por JS -->
-    </div>
-
-    <div class="directivas" id="directivas">
-        <h3>Directivas de Corrección Inmediata</h3>
-        <ul id="listaDirectivas"></ul>
-    </div>
-</div>
 
 <script>
-    function formatearARS(numero) {
-        return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(numero);
-    }
+    /* --- REPRODUCTOR DE MÚSICA --- */
+    const musica = document.getElementById('musicaFondo');
+    const btnAudio = document.getElementById('btnAudio');
 
-    function asignarEstado(valor, umbrales, etiquetas, clases) {
-        for (let i = 0; i < umbrales.length; i++) {
-            if (valor < umbrales[i]) return { txt: etiquetas[i], cls: clases[i], score: i };
+    function toggleMúsica() {
+        if (musica.paused) {
+            musica.play();
+            btnAudio.innerText = "⏸ Pausar";
+        } else {
+            musica.pause();
+            btnAudio.innerText = "▶ Reproducir";
         }
-        return { txt: etiquetas[etiquetas.length-1], cls: clases[clases.length-1], score: clases.length-1 };
     }
 
-    function crearTarjeta(titulo, valor, estadoObj) {
-        return `
-            <div class="metric-card" style="border-left-color: var(--${estadoObj.cls.replace('status-','')})">
-                <div class="metric-title">${titulo}</div>
-                <div class="metric-value">${valor}</div>
-                <div class="metric-status ${estadoObj.cls}">${estadoObj.txt}</div>
-            </div>
-        `;
+    /* --- LÓGICA DE INTERCAMBIO DE SOLAPAS --- */
+    function cambiarSolapa(evento, idSolapa) {
+        const contenidos = document.querySelectorAll('.contenido-solapa');
+        contenidos.forEach(solapa => solapa.classList.remove('activa'));
+
+        const botones = document.querySelectorAll('.boton-pestana');
+        botones.forEach(btn => btn.classList.remove('activa'));
+
+        document.getElementById(idSolapa).classList.add('activa');
+        evento.currentTarget.classList.add('activa');
     }
 
-    function ejecutarAuditoria() {
-        const ingresos = parseFloat(document.getElementById('ingresoTotal').value) || 0;
-        const ingAnterior = parseFloat(document.getElementById('ingresoAnterior').value) || 1; 
-        const ingPrincipal = parseFloat(document.getElementById('ingresoPrincipal').value) || 0;
-        const gastos = parseFloat(document.getElementById('gastoTotal').value) || 1;
-        const liquidez = parseFloat(document.getElementById('liquidez').value) || 0;
-        const iol = parseFloat(document.getElementById('iol').value) || 0;
-        const inversion = parseFloat(document.getElementById('inversionMes').value) || 0;
-        const deudas = parseFloat(document.getElementById('deudas').value) || 0;
-        const vpnAnterior = parseFloat(document.getElementById('vpnAnterior').value) || 0;
+    /* --- DECORACIONES FLOTANTES (Globos y Confeti) --- */
+    const decoracionContainer = document.getElementById('decoracion');
+    const colores = ['#f8a5c2', '#f7d794', '#f78fb3', '#e77f67', '#63cdda', '#78e08f'];
 
-        const gastoDiario = gastos / 30;
+    function crearDecoraciones() {
+        for (let i = 0; i < 8; i++) {
+            let globo = document.createElement('div');
+            globo.classList.add('globo');
+            globo.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+            globo.style.left = Math.random() * 90 + 'vw';
+            globo.style.animationDelay = Math.random() * 8 + 's';
+            globo.style.transform = `scale(${Math.random() * 0.3 + 0.7})`;
+            decoracionContainer.appendChild(globo);
+        }
+        for (let i = 0; i < 20; i++) {
+            let confeti = document.createElement('div');
+            confeti.classList.add('confeti');
+            confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+            confeti.style.left = Math.random() * 100 + 'vw';
+            confeti.style.animationDelay = Math.random() * 5 + 's';
+            if(Math.random() > 0.5) confeti.style.borderRadius = '50%';
+            decoracionContainer.appendChild(confeti);
+        }
+    }
+    crearDecoraciones();
 
-        // 1. Liquidez (Días)
-        const diasLiquidez = liquidez / gastoDiario;
-        const estLiq = asignarEstado(diasLiquidez, [7, 30, 90], 
-            ['PELIGRO (<7)', 'FRÁGIL (7-30)', 'SANO (30-90)', 'SÓLIDO (90+)'], 
-            ['status-peligro', 'status-fragil', 'status-sano', 'status-solido']);
+    /* --- LÓGICA DE LA RASPADITA DIGITAL (REUTILIZABLE) --- */
+    function inicializarRaspadita(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        let rasgando = false;
 
-        // 2. Fondo Emergencia (Meses)
-        const mesesFondo = iol / gastos;
-        const estFondo = asignarEstado(mesesFondo, [1, 3, 6], 
-            ['CRÍTICO (0-1)', 'FRÁGIL (1-3)', 'BUENO (3-6)', 'EXCELENTE (6-12)'], 
-            ['status-peligro', 'status-fragil', 'status-sano', 'status-solido']);
-
-        // 3. Ratio Ahorro (%)
-        const ratioAhorro = ((ingresos - gastos) / ingresos) * 100;
-        const estAhorro = asignarEstado(ratioAhorro, [10, 20, 40], 
-            ['POBRE (<10%)', 'ACEPTABLE (10-20%)', 'FUERTE (20-40%)', 'ACELERACIÓN (40%+)'], 
-            ['status-peligro', 'status-fragil', 'status-sano', 'status-solido']);
-
-        // 4. Dependencia Ingreso (%) - Lógica inversa (menor es mejor)
-        const depIngreso = (ingPrincipal / ingresos) * 100;
-        let estDep;
-        if (depIngreso > 80) estDep = {txt: 'ALTO (>80%)', cls: 'status-peligro', score: 0};
-        else if (depIngreso > 60) estDep = {txt: 'MEDIO (60-80%)', cls: 'status-fragil', score: 1};
-        else if (depIngreso > 40) estDep = {txt: 'BUENO (40-60%)', cls: 'status-sano', score: 2};
-        else estDep = {txt: 'SÓLIDO (<40%)', cls: 'status-solido', score: 3};
-
-        // 5. Crecimiento Ingresos (%)
-        const crecimiento = ((ingresos - ingAnterior) / ingAnterior) * 100;
-        const estCrecimiento = asignarEstado(crecimiento, [0, 5, 15], 
-            ['ALERTA (<0%)', 'ESTANCADO (0-5%)', 'SALUDABLE (5-15%)', 'EXPANSIÓN (15%+)'], 
-            ['status-peligro', 'status-fragil', 'status-sano', 'status-solido']);
-
-        // 6. Ratio Inversión/Consumo (%)
-        const ratioInv = (inversion / ingresos) * 100;
-        const estInv = asignarEstado(ratioInv, [5, 15, 30], 
-            ['CONSUMO TOTAL (<5%)', 'BÁSICO (5-15%)', 'SÓLIDO (15-30%)', 'CONSTRUCTOR (30%+)'], 
-            ['status-peligro', 'status-fragil', 'status-sano', 'status-solido']);
-
-        // 7. VPN
-        const vpnActual = (liquidez + iol) - deudas;
-        const tendenciaVPN = vpnAnterior === 0 ? 'NEUTRAL' : (vpnActual >= vpnAnterior ? '⬆️ SUBE' : '⬇️ BAJA');
-        const colorVPN = tendenciaVPN.includes('SUBE') ? 'status-sano' : (tendenciaVPN.includes('BAJA') ? 'status-peligro' : 'status-fragil');
-
-        // Render Cards
-        const dash = document.getElementById('dashboard');
-        dash.innerHTML = `
-            ${crearTarjeta('1. Liquidez Inmediata', diasLiquidez.toFixed(1) + ' Días', estLiq)}
-            ${crearTarjeta('2. Fondo Emergencia', mesesFondo.toFixed(1) + ' Meses', estFondo)}
-            ${crearTarjeta('3. Ratio de Ahorro', ratioAhorro.toFixed(1) + ' %', estAhorro)}
-            ${crearTarjeta('4. Dependencia Ingreso', depIngreso.toFixed(1) + ' %', estDep)}
-            ${crearTarjeta('5. Tasa Crecimiento', crecimiento.toFixed(1) + ' %', estCrecimiento)}
-            ${crearTarjeta('6. Inversión / Consumo', ratioInv.toFixed(1) + ' %', estInv)}
-            <div class="metric-card" style="border-left-color: var(--border)">
-                <div class="metric-title">7. Valor Patrimonial Neto</div>
-                <div class="metric-value">${formatearARS(vpnActual)}</div>
-                <div class="metric-status ${colorVPN}">${tendenciaVPN}</div>
-            </div>
-        `;
-        dash.style.display = 'grid';
-
-        // Evaluar peor métrica para directivas
-        const metricas = [
-            { id: 1, name: 'Liquidez Inmediata', score: estLiq.score },
-            { id: 2, name: 'Fondo de Emergencia', score: estFondo.score },
-            { id: 3, name: 'Ratio de Ahorro', score: estAhorro.score },
-            { id: 4, name: 'Dependencia de Ingreso', score: estDep.score },
-            { id: 5, name: 'Crecimiento de Ingresos', score: estCrecimiento.score },
-            { id: 6, name: 'Ratio Inversión/Consumo', score: estInv.score }
-        ];
-
-        metricas.sort((a, b) => a.score - b.score);
-        const peorMetrica = metricas[0];
-
-        const directivasArea = document.getElementById('directivas');
-        const listaDir = document.getElementById('listaDirectivas');
-        listaDir.innerHTML = '';
-
-        let dir1 = '';
-        let dir2 = '';
-
-        switch(peorMetrica.id) {
-            case 1:
-                dir1 = "Frenar cualquier salida de capital hacia IOL o proyectos secundarios hasta garantizar un piso de 30 días de cobertura operativa en Mercado Pago.";
-                dir2 = "Liquidar posiciones de corto plazo o renegociar fechas de pagos fijos para recomponer la barrera de liquidez esta misma semana.";
-                break;
-            case 2:
-                dir1 = "El capital actual expone la estructura. Redirigir el 100% del excedente de este mes a activos conservadores en IOL; cero riesgo hasta cubrir 3 meses de piso.";
-                dir2 = "Auditar y recortar gastos variables del mes en curso para inyectar liquidez directa al fondo de contingencia.";
-                break;
-            case 3:
-                dir1 = "El motor de retención está fallando. Ejecutar un bloqueo automático del 20% de los ingresos internacionales ni bien ingresen, antes de cualquier gasto corriente.";
-                dir2 = "Identificar y eliminar inmediatamente el 10% de los gastos no esenciales presupuestados para los próximos 30 días.";
-                break;
-            case 4:
-                dir1 = "Riesgo de concentración crítico. Acelerar la captación de pacientes internacionales en Centro Teseo esta semana para diversificar la entrada de divisas.";
-                dir2 = "Priorizar estructuralmente la comercialización de los servicios de psicología para crear una segunda columna fuerte de facturación.";
-                break;
-            case 5:
-                dir1 = "Facturación estancada. Ajustar tarifas de horas clínicas locales según inflación o aumentar el volumen de horas operativas de forma inmediata.";
-                dir2 = "Lanzar una campaña táctica de reactivación de pacientes o empaquetar servicios en Centro Teseo para generar un pico de caja a corto plazo.";
-                break;
-            case 6:
-                dir1 = "Se está consumiendo el capital en lugar de construir patrimonio. Imponer una regla estricta: ninguna compra no vital hasta que el 15% del ingreso total haya sido invertido.";
-                dir2 = "Auditar el flujo de Mercado Pago para detectar fugas de capital hormiga y redireccionarlas automáticamente a instrumentos de interés compuesto.";
-                break;
+        // Dibujar el recubrimiento
+        ctx.fillStyle = '#e3d7bf'; 
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = 'rgba(255,255,255,0.25)';
+        for (let i = 0; i < canvas.width; i += 8) {
+            for (let j = 0; j < canvas.height; j += 8) {
+                ctx.fillRect(i, j, 2, 2);
+            }
         }
 
-        listaDir.innerHTML = `<li><strong>Punto Crítico Detectado: ${peorMetrica.name}.</strong> ${dir1}</li><li>${dir2}</li>`;
-        directivasArea.style.display = 'block';
+        ctx.fillStyle = '#7a6b52';
+        ctx.font = 'bold 20px "Nunito", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('RASPÁ ACÁ 🎁', 130, 135);
+
+        ctx.globalCompositeOperation = 'destination-out';
+
+        function obtenerPosicion(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: clienteX - rect.left,
+                y: clienteY - rect.top
+            };
+        }
+
+        function empezar(e) { 
+            rasgando = true; 
+            raspar(e); 
+        }
+        
+        function terminar() { 
+            rasgando = false; 
+            ctx.beginPath(); 
+            verificarProgreso(canvas, ctx);
+        }
+
+        function raspar(e) {
+            if (!rasgando) return;
+            e.preventDefault();
+            const pos = obtenerPosicion(e);
+            
+            ctx.lineWidth = 35;
+            ctx.lineCap = 'round';
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+
+        canvas.addEventListener('mousedown', empezar);
+        canvas.addEventListener('mouseup', terminar);
+        canvas.addEventListener('mousemove', raspar);
+
+        canvas.addEventListener('touchstart', empezar);
+        canvas.addEventListener('touchend', terminar);
+        canvas.addEventListener('touchmove', raspar);
     }
+
+    /* Calcular cuánto se raspó para revelar y permitir clic */
+    function verificarProgreso(canvas, ctx) {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        let pixelsBorrados = 0;
+        const totalPixeles = imageData.data.length / 4;
+        
+        for (let i = 3; i < imageData.data.length; i += 4) {
+            if (imageData.data[i] === 0) pixelsBorrados++;
+        }
+        
+        // Si raspó más del 40%, ocultar el canvas por completo para poder hacer clic
+        if (pixelsBorrados / totalPixeles > 0.40) {
+            canvas.style.transition = 'opacity 0.5s ease';
+            canvas.style.opacity = '0';
+            setTimeout(() => {
+                canvas.style.display = 'none';
+            }, 500);
+        }
+    }
+
+    // Inicializar las 3 raspaditas
+    inicializarRaspadita('canvasR1');
+    inicializarRaspadita('canvasR2');
+    inicializarRaspadita('canvasR3');
+
 </script>
 
 </body>
