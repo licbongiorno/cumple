@@ -24,14 +24,14 @@
             align-items: center;
             overflow-x: hidden;
             position: relative;
-            padding: 20px;
+            padding: 20px 10px;
         }
 
-        /* --- EFECTOS FLOTANTES (Globos y Confeti) --- */
+        /* --- EFECTOS FLOTANTES --- */
         .decoracion-flotante {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; /* Para que no molesten al hacer click o raspar */
+            pointer-events: none;
             z-index: 1;
         }
 
@@ -41,10 +41,9 @@
             width: 50px;
             height: 65px;
             border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-            animation: flotar Arriba 12s linear infinite;
-            opacity: 0.8;
+            animation: flotarArriba 12s linear infinite;
+            opacity: 0.6;
         }
-        /* Hilo del globo */
         .globo::after {
             content: "";
             position: absolute;
@@ -58,7 +57,7 @@
             top: -20px;
             width: 10px;
             height: 10px;
-            animation: caer diagonal 8s linear infinite;
+            animation: caer 8s linear infinite;
         }
 
         @keyframes flotarArriba {
@@ -72,7 +71,7 @@
             100% { transform: translateY(110vh) rotate(360deg); }
         }
 
-        /* --- ESTILO DIARIO / BITÁCORA --- */
+        /* --- DIARIO CONTENEDOR --- */
         .diario-contenedor {
             background: #fffdf9;
             width: 100%;
@@ -80,42 +79,87 @@
             border: 1px solid #e6dfd3;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(163, 145, 117, 0.2);
-            padding: 30px 25px;
             position: relative;
-            z-index: 10; /* Por encima de los globos de fondo */
-            border-left: 15px solid #e0cda9; /* Simula el lomo del diario */
+            z-index: 10;
+            border-left: 15px solid #e0cda9;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        /* Líneas de cuaderno simulación opcional */
         .diario-contenido {
             background-image: linear-gradient(#e1effa 1px, transparent 1px);
             background-size: 100% 28px;
             line-height: 28px;
-            padding-top: 5px;
+            padding: 30px 25px 15px 25px;
         }
 
         h1 {
             font-family: 'Caveat', cursive;
-            font-size: 2.8rem;
+            font-size: 2.6rem;
             color: #d45d79;
             text-align: center;
             line-height: 1.2;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
         }
 
         p.dedicatoria {
             font-family: 'Caveat', cursive;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: #555;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
-        /* --- ZONA DE LA RASPADITA --- */
+        /* --- PESTAÑAS / SOLAPAS --- */
+        .pestanas-navegacion {
+            display: flex;
+            background: #f5edd6;
+            border-top: 1px solid #e6dfd3;
+        }
+
+        .boton-pestana {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 12px 5px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #7a6b52;
+            cursor: pointer;
+            transition: background 0.2s;
+            outline: none;
+            text-align: center;
+        }
+
+        .boton-pestana:not(:last-child) {
+            border-right: 1px solid #e6dfd3;
+        }
+
+        .boton-pestana.activa {
+            background: #fffdf9;
+            color: #d45d79;
+        }
+
+        .contenido-solapa {
+            display: none;
+            padding: 15px 0;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .contenido-solapa.activa {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- CONTENIDO SOLAPA 1: RASPADITA --- */
         .instrucciones {
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #888;
             margin-bottom: 10px;
             text-transform: uppercase;
@@ -124,8 +168,8 @@
 
         .contenedor-raspadita {
             position: relative;
-            width: 280px;
-            height: 280px;
+            width: 260px;
+            height: 260px;
             margin: 0 auto;
             user-select: none;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -138,20 +182,71 @@
             top: 0; left: 0; width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center;
             background: #fdfbf7;
-            box-sizing: border-box;
         }
 
         .contenido-oculto img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ajusta la imagen 1.png al recuadro */
+            object-fit: cover;
         }
 
         canvas {
             position: absolute;
             top: 0; left: 0;
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="%23d45d79"/></svg>'), auto;
             touch-action: none;
+        }
+
+        /* --- CONTENIDO SOLAPA 2: CUENTA REGRESIVA --- */
+        .reloj-contenedor {
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+        .reloj-grid {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .reloj-bloque {
+            background: #f5eedc;
+            padding: 10px;
+            border-radius: 6px;
+            min-width: 60px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .reloj-numero {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d45d79;
+            display: block;
+            line-height: 1;
+        }
+
+        .reloj-etiqueta {
+            font-size: 0.7rem;
+            color: #7a6b52;
+            text-transform: uppercase;
+        }
+
+        /* --- CONTENIDO SOLAPA 3: GOOGLE MAPS --- */
+        .mapa-contenedor {
+            width: 100%;
+            height: 240px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 2px solid #e6dfd3;
+        }
+
+        .info-hotel {
+            font-size: 0.9rem;
+            color: #444;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -162,63 +257,137 @@
     <div class="diario-contenedor">
         <div class="diario-contenido">
             <h1>¡Feliz Cumpleaños Cairto! 🎂</h1>
-            <p class="dedicatoria">
-                Hoy es un día muy especial y preparé esta bitácora digital para vos. 
-                Dejaste una sorpresa guardada acá abajo... ¡Tenés que raspar la tarjeta para descubrir tu regalo! ✨
-            </p>
+            <p class="dedicatoria">Una bitácora pensada para vos en tu día. Navegá por las solapas de abajo para descubrir todo.</p>
             
-            <p class="instrucciones">👇 Raspá acá abajo con el dedo o mouse 👇</p>
+            <!-- CONTENIDO DE LAS SOLAPAS -->
             
-            <div class="contenedor-raspadita">
-                <div class="contenido-oculto">
-                    <img src="1.png" alt="Regalo Sorpresa de Cumpleaños">
+            <!-- Solapa 1: Regalo (Raspadita) -->
+            <div id="solapa-regalo" class="contenido-solapa activa">
+                <p class="instrucciones">👇 Raspá acá abajo para ver tu regalo 👇</p>
+                <div class="contenedor-raspadita">
+                    <div class="contenido-oculto">
+                        <img src="1.png" alt="Regalo Sorpresa">
+                    </div>
+                    <canvas id="canvasRaspadita" width="260" height="260"></canvas>
                 </div>
-                <canvas id="canvasRaspadita" width="280" height="280"></canvas>
             </div>
+
+            <!-- Solapa 2: ¿Cuándo llego? -->
+            <div id="solapa-tiempo" class="contenido-solapa">
+                <div class="reloj-contenedor">
+                    <p class="info-hotel" style="color: #d45d79; font-size: 1.1rem;">Falta muy poco para vernos...</p>
+                    <p style="font-size: 0.95rem; color:#666;">Destino fijado para el 25 de Mayo a las 19:00 hs</p>
+                    
+                    <div class="reloj-grid">
+                        <div class="reloj-bloque"><span class="reloj-numero" id="dias">00</span><span class="reloj-etiqueta">Días</span></div>
+                        <div class="reloj-bloque"><span class="reloj-numero" id="horas">00</span><span class="reloj-etiqueta">Hs</span></div>
+                        <div class="reloj-bloque"><span class="reloj-numero" id="minutos">00</span><span class="reloj-etiqueta">Min</span></div>
+                        <div class="reloj-bloque"><span class="reloj-numero" id="segundos">00</span><span class="reloj-etiqueta">Seg</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solapa 3: Ubicación -->
+            <div id="solapa-mapa" class="contenido-solapa">
+                <p class="info-hotel">📍 Hotel Marriott — Carlos Pellegrini 995</p>
+                <div class="mapa-contenedor">
+                    <!-- Embed oficial de Google Maps apuntando a la dirección exacta -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m4!1m2!1d-34.599026!2d-58.380486!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccacf5951dbdb%3A0x6fb86b5921f669db!2sMarriott%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1714000000000!5m2!1ses-419!2sar" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BARRA DE SOLAPAS INFERIORES -->
+        <div class="pestanas-navegacion">
+            <button class="boton-pestana activa" onclick="cambiarSolapa(event, 'solapa-regalo')">🎁 REGALO</button>
+            <button class="boton-pestana" onclick="cambiarSolapa(event, 'solapa-tiempo')">🕒 ¿CUÁNDO LLEGO?</button>
+            <button class="boton-pestana" onclick="cambiarSolapa(event, 'solapa-mapa')">📍 LUGAR</button>
         </div>
     </div>
 
 <script>
-    /* --- GENERADOR DE GLOBOS Y CONFETI --- */
+    /* --- LÓGICA DE INTERCAMBIO DE SOLAPAS --- */
+    function cambiarSolapa(evento, idSolapa) {
+        const contenidos = document.querySelectorAll('.contenido-solapa');
+        contenidos.forEach(solapa => solapa.classList.remove('activa'));
+
+        const botones = document.querySelectorAll('.boton-pestana');
+        botones.forEach(btn => btn.classList.remove('activa'));
+
+        document.getElementById(idSolapa).classList.add('activa');
+        evento.currentTarget.classList.add('activa');
+    }
+
+    /* --- DECORACIONES FLOTANTES (Globos y Confeti) --- */
     const decoracionContainer = document.getElementById('decoracion');
     const colores = ['#f8a5c2', '#f7d794', '#f78fb3', '#e77f67', '#63cdda', '#78e08f'];
 
     function crearDecoraciones() {
-        // Generar 8 globos en posiciones aleatorias
         for (let i = 0; i < 8; i++) {
             let globo = document.createElement('div');
             globo.classList.add('globo');
             globo.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
             globo.style.left = Math.random() * 90 + 'vw';
             globo.style.animationDelay = Math.random() * 8 + 's';
-            globo.style.transform = `scale(${Math.random() * 0.4 + 0.7})`;
+            globo.style.transform = `scale(${Math.random() * 0.3 + 0.7})`;
             decoracionContainer.appendChild(globo);
         }
-
-        // Generar 20 papelitos de confeti
         for (let i = 0; i < 20; i++) {
             let confeti = document.createElement('div');
             confeti.classList.add('confeti');
             confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
             confeti.style.left = Math.random() * 100 + 'vw';
             confeti.style.animationDelay = Math.random() * 5 + 's';
-            // Formas aleatorias (cuadrados o círculos)
             if(Math.random() > 0.5) confeti.style.borderRadius = '50%';
             decoracionContainer.appendChild(confeti);
         }
     }
     crearDecoraciones();
 
+    /* --- CUENTA REGRESIVA (Fijada el 25 de Mayo a las 19:00) --- */
+    const fechaObjetivo = new Date('May 25, 2026 19:00:00').getTime();
+
+    const intervaloReloj = setInterval(function() {
+        const ahora = new Date().getTime();
+        const distancia = fechaObjetivo - ahora;
+
+        if (distancia < 0) {
+            clearInterval(intervaloReloj);
+            document.getElementById('dias').innerText = "00";
+            document.getElementById('horas').innerText = "00";
+            document.getElementById('minutos').innerText = "00";
+            document.getElementById('segundos').innerText = "00";
+            return;
+        }
+
+        const d = Math.floor(distancia / (1000 * 60 * 60 * 24));
+        const h = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((distancia % (1000 * 60)) / 1000);
+
+        document.getElementById('dias').innerText = d < 10 ? '0' + d : d;
+        document.getElementById('horas').innerText = h < 10 ? '0' + h : h;
+        document.getElementById('minutos').innerText = m < 10 ? '0' + m : m;
+        document.getElementById('segundos').innerText = s < 10 ? '0' + s : s;
+    }, 1000);
+
     /* --- LÓGICA DE LA RASPADITA DIGITAL --- */
     const canvas = document.getElementById('canvasRaspadita');
     const ctx = canvas.getContext('2d');
     let rasgando = false;
 
-    // Dibujar la capa superior (Estilo raspadita clásica dorada/rosada suave)
     ctx.fillStyle = '#e3d7bf'; 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Agregar un patrón de puntitos blancos para textura de raspadita
     ctx.fillStyle = 'rgba(255,255,255,0.25)';
     for (let i = 0; i < canvas.width; i += 8) {
         for (let j = 0; j < canvas.height; j += 8) {
@@ -226,13 +395,11 @@
         }
     }
 
-    // Texto frontal sobre la raspadita
     ctx.fillStyle = '#7a6b52';
-    ctx.font = 'bold 22px "Nunito", sans-serif';
+    ctx.font = 'bold 20px "Nunito", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('RASPÁ ACÁ 🎁', 140, 145);
+    ctx.fillText('RASPÁ ACÁ 🎁', 130, 135);
 
-    // Activamos el modo "Goma de borrar"
     ctx.globalCompositeOperation = 'destination-out';
 
     function obtenerPosicion(e) {
@@ -250,10 +417,10 @@
 
     function raspar(e) {
         if (!rasgando) return;
-        e.preventDefault(); // Evita scroll molesto en celulares
+        e.preventDefault();
         const pos = obtenerPosicion(e);
         
-        ctx.lineWidth = 35; // Grosor del raspado (perfecto para dedos)
+        ctx.lineWidth = 35;
         ctx.lineCap = 'round';
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
@@ -261,12 +428,10 @@
         ctx.moveTo(pos.x, pos.y);
     }
 
-    // Eventos Mouse (Escritorio)
     canvas.addEventListener('mousedown', empezar);
     canvas.addEventListener('mouseup', terminar);
     canvas.addEventListener('mousemove', raspar);
 
-    // Eventos Touch (Pantallas táctiles / Celulares)
     canvas.addEventListener('touchstart', empezar);
     canvas.addEventListener('touchend', terminar);
     canvas.addEventListener('touchmove', raspar);
