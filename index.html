@@ -6,443 +6,608 @@
     <title>¡Feliz Cumpleaños Cairto!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --blush:    #f9c4d4;
+            --lavender: #dac8f0;
+            --mint:     #b8e8d4;
+            --peach:    #ffd4b2;
+            --butter:   #fef0a8;
+            --sky:      #c0dff4;
+            --rose:     #e8738a;
+            --plum:     #7c5c8a;
+            --sage:     #78b09a;
+            --cream:    #fefaf6;
+            --line:     #ebe3f8;
+            --card-bg:  #ffffff;
+            --shadow:   rgba(200,168,224,0.25);
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: #fcf8f2;
-            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(145deg, #fdf4ff 0%, #f0f8ff 50%, #fff5f7 100%);
+            font-family: 'Quicksand', sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             overflow-x: hidden;
-            position: relative;
-            padding: 20px 10px;
+            padding: 24px 12px 40px;
         }
 
-        /* --- BOTÓN DE AUDIO --- */
+        /* ── CANVAS DE PARTÍCULAS ── */
+        #canvas-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── BOTÓN AUDIO ── */
         .btn-audio {
             position: fixed;
-            top: 15px;
-            right: 15px;
-            background: #d45d79;
-            color: white;
+            top: 14px; right: 14px;
+            background: linear-gradient(135deg, var(--rose), #c9566e);
+            color: #fff;
             border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-family: 'Nunito', sans-serif;
-            font-weight: bold;
+            padding: 9px 18px;
+            border-radius: 30px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
             cursor: pointer;
-            z-index: 100;
-            box-shadow: 0 4px 10px rgba(212, 93, 121, 0.3);
-            transition: transform 0.2s;
+            z-index: 200;
+            box-shadow: 0 4px 16px rgba(232,115,138,0.45);
+            transition: transform 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.5px;
         }
-        .btn-audio:hover {
-            transform: scale(1.05);
-        }
+        .btn-audio:hover { transform: scale(1.06); box-shadow: 0 6px 22px rgba(232,115,138,0.55); }
 
-        /* --- EFECTOS FLOTANTES --- */
-        .decoracion-flotante {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .globo {
-            position: absolute;
-            bottom: -150px;
-            width: 50px;
-            height: 65px;
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-            animation: flotarArriba 12s linear infinite;
-            opacity: 0.6;
-        }
-        .globo::after {
-            content: "";
-            position: absolute;
-            bottom: -12px; left: 24px;
-            width: 2px; height: 12px;
-            background-color: #999;
-        }
-
-        .confeti {
-            position: absolute;
-            top: -20px;
-            width: 10px;
-            height: 10px;
-            animation: caer 8s linear infinite;
-        }
-
-        @keyframes flotarArriba {
-            0% { transform: translateY(0) translateX(0) rotate(0deg); }
-            50% { transform: translateY(-60vh) translateX(30px) rotate(8deg); }
-            100% { transform: translateY(-120vh) translateX(-20px) rotate(-5deg); }
-        }
-
-        @keyframes caer {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(110vh) rotate(360deg); }
-        }
-
-        /* --- DIARIO CONTENEDOR --- */
-        .diario-contenedor {
-            background: #fffdf9;
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid #e6dfd3;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(163, 145, 117, 0.2);
+        /* ── CARD PRINCIPAL ── */
+        .card {
             position: relative;
             z-index: 10;
-            border-left: 15px solid #e0cda9;
-            display: flex;
-            flex-direction: column;
+            width: 100%;
+            max-width: 460px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow:
+                0 2px 0 var(--blush),
+                0 6px 30px var(--shadow),
+                0 0 0 1px rgba(218,200,240,0.5);
+            overflow: hidden;
+            animation: cardIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0)   scale(1); }
+        }
+
+        /* ── HEADER BANNER ── */
+        .header-banner {
+            background: linear-gradient(135deg, #fce4ec 0%, #ede7f6 50%, #e3f2fd 100%);
+            padding: 32px 28px 26px;
+            text-align: center;
+            position: relative;
             overflow: hidden;
         }
 
-        .diario-contenido {
-            background-image: linear-gradient(#e1effa 1px, transparent 1px);
-            background-size: 100% 28px;
-            line-height: 28px;
-            padding: 30px 25px 15px 25px;
+        .header-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 20% 30%, rgba(249,196,212,0.6) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 35% at 80% 70%, rgba(193,216,244,0.5) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 50% at 50% 10%, rgba(218,200,240,0.4) 0%, transparent 70%);
+        }
+
+        .header-emojis {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 6px;
+            position: relative;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-5px); }
         }
 
         h1 {
-            font-family: 'Caveat', cursive;
-            font-size: 2.6rem;
-            color: #d45d79;
-            text-align: center;
-            line-height: 1.2;
-            margin-bottom: 10px;
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(1.7rem, 5vw, 2.3rem);
+            color: var(--rose);
+            line-height: 1.25;
+            position: relative;
+            text-shadow: 2px 3px 0 rgba(232,115,138,0.15);
         }
 
-        p.dedicatoria {
+        .subtitulo {
             font-family: 'Caveat', cursive;
-            font-size: 1.5rem;
-            color: #555;
-            text-align: center;
-            margin-bottom: 15px;
+            font-size: 1.25rem;
+            color: var(--plum);
+            margin-top: 8px;
+            position: relative;
+            opacity: 0.85;
+            line-height: 1.4;
         }
 
-        /* --- PESTAÑAS / SOLAPAS --- */
-        .pestanas-navegacion {
+        /* ── SEPARADOR ONDULADO ── */
+        .wave-divider {
+            display: block;
+            width: 100%;
+            height: 28px;
+            margin-top: -1px;
+        }
+
+        /* ── TABS ── */
+        .tabs-bar {
             display: flex;
-            background: #f5edd6;
-            border-top: 1px solid #e6dfd3;
+            background: #fdf6ff;
+            border-bottom: 2px solid var(--line);
         }
 
-        .boton-pestana {
+        .tab-btn {
             flex: 1;
             background: none;
             border: none;
-            padding: 12px 5px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #7a6b52;
+            padding: 14px 4px 11px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #b4a0c8;
             cursor: pointer;
-            transition: background 0.2s;
             outline: none;
-            text-align: center;
-        }
-
-        .boton-pestana:not(:last-child) {
-            border-right: 1px solid #e6dfd3;
-        }
-
-        .boton-pestana.activa {
-            background: #fffdf9;
-            color: #d45d79;
-        }
-
-        .contenido-solapa {
-            display: none;
-            padding: 15px 0;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .contenido-solapa.activa {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* --- RASPADITA --- */
-        .instrucciones {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 10px;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .contenedor-raspadita {
+            transition: color 0.2s, background 0.2s;
+            border-bottom: 3px solid transparent;
             position: relative;
-            width: 260px;
-            height: 260px;
-            margin: 0 auto;
-            user-select: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            background: #fdfbf7;
+            bottom: -2px;
         }
 
-        .contenido-oculto {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center;
+        .tab-btn:not(:last-child) { border-right: 1px solid var(--line); }
+
+        .tab-btn.activa {
+            color: var(--rose);
+            background: #fff;
+            border-bottom-color: var(--rose);
+        }
+
+        /* ── PANEL DE SOLAPA ── */
+        .tab-panel {
+            display: none;
+            padding: 24px 20px 28px;
+            animation: fadeSlide 0.35s ease both;
+            background: var(--card-bg);
+        }
+
+        .tab-panel.activa { display: block; }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RASPADITA ── */
+        .scratch-label {
             text-align: center;
-            padding: 20px;
+            font-size: 0.72rem;
+            color: #c0aad8;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            font-weight: 700;
         }
 
-        .contenido-oculto img {
+        .scratch-wrap {
+            position: relative;
+            width: 270px;
+            height: 270px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow:
+                0 0 0 4px #fff,
+                0 0 0 6px var(--lavender),
+                0 8px 28px var(--shadow);
+        }
+
+        .scratch-inner {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+            padding: 24px;
+            background: linear-gradient(135deg, #fff5fb 0%, #f0eaff 100%);
+        }
+
+        .scratch-inner img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            position: absolute;
+            inset: 0;
         }
 
-        .link-regalo {
-            display: inline-block;
-            background: #d45d79;
+        .btn-regalo {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--rose) 0%, #c9566e 100%);
             color: #fff;
             text-decoration: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
+            padding: 13px 24px;
+            border-radius: 40px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 16px rgba(232,115,138,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-regalo:hover { transform: scale(1.05); box-shadow: 0 6px 24px rgba(232,115,138,0.55); }
+
+        .badge-regalo {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            border-radius: 50%;
+            width: 28px; height: 28px;
+            line-height: 28px;
             font-size: 1.1rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            transition: background 0.3s;
         }
 
-        .link-regalo:hover {
-            background: #b54761;
-        }
-
-        canvas {
+        .scratch-canvas {
             position: absolute;
-            top: 0; left: 0;
+            inset: 0;
             touch-action: none;
-            cursor: pointer;
+            cursor: crosshair;
+            border-radius: 20px;
         }
 
+        /* ── PROGRESS BAR RASPADITA ── */
+        .scratch-progress-wrap {
+            width: 270px;
+            margin: 10px auto 0;
+            height: 6px;
+            background: var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .scratch-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--rose), var(--lavender));
+            border-radius: 10px;
+            transition: width 0.15s ease;
+        }
+
+        /* ── FOOTER ── */
+        .card-footer {
+            background: linear-gradient(135deg, #fce4ec 0%, #ede7f6 100%);
+            padding: 16px 24px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            color: var(--plum);
+            opacity: 0.75;
+        }
+
+        /* ── STICKER LATERAL ── */
+        .sticker-edge {
+            position: absolute;
+            left: -14px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sticker-dot {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Audio Player -->
-    <audio id="musicaFondo" src="1.mp3" loop></audio>
-    <button id="btnAudio" class="btn-audio" onclick="toggleMúsica()">▶ Reproducir</button>
+<canvas id="canvas-bg"></canvas>
 
-    <div class="decoracion-flotante" id="decoracion"></div>
+<audio id="musicaFondo" src="1.mp3" loop></audio>
+<button id="btnAudio" class="btn-audio" onclick="toggleMusica()">▶ Reproducir</button>
 
-    <div class="diario-contenedor">
-        <div class="diario-contenido">
-            <h1>¡Feliz Cumpleaños Cairto! 🎂</h1>
-            <p class="dedicatoria">Una bitácora pensada para vos en tu día. Navegá por las solapas de abajo para descubrir tus regalos.</p>
-            
-            <!-- CONTENIDO DE LAS SOLAPAS -->
-            
-            <!-- Solapa 1: Regalo 1 (Enlace) -->
-            <div id="solapa-regalo1" class="contenido-solapa activa">
-                <p class="instrucciones">👇 Raspá acá abajo para tu Primer Regalo 👇</p>
-                <div class="contenedor-raspadita">
-                    <div class="contenido-oculto">
-                        <a href="https://google.com/2.png" target="_blank" class="link-regalo">🎁 ¡Tocar para abrir!</a>
-                    </div>
-                    <canvas id="canvasR1" width="260" height="260"></canvas>
-                </div>
+<div class="card">
+
+    <!-- BANNER SUPERIOR -->
+    <div class="header-banner">
+        <span class="header-emojis">🎀 🎂 🎁 ✨</span>
+        <h1>¡Feliz Cumpleaños<br>Cairto!</h1>
+        <p class="subtitulo">Una bitácora pensada para vos 💕<br>Explorá las solapas para descubrir tus regalos</p>
+    </div>
+
+    <!-- ONDAS DIVISORAS -->
+    <svg class="wave-divider" viewBox="0 0 460 28" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,14 C80,28 160,0 230,14 C300,28 380,0 460,14 L460,0 L0,0 Z"
+              fill="url(#waveGradient)"/>
+        <defs>
+            <linearGradient id="waveGradient" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"   stop-color="#fce4ec"/>
+                <stop offset="50%"  stop-color="#ede7f6"/>
+                <stop offset="100%" stop-color="#e3f2fd"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- TABS -->
+    <div class="tabs-bar">
+        <button class="tab-btn activa" onclick="cambiarTab(event,'panel1')">🎁 Regalo 1</button>
+        <button class="tab-btn"        onclick="cambiarTab(event,'panel2')">🎁 Regalo 2</button>
+        <button class="tab-btn"        onclick="cambiarTab(event,'panel3')">🎁 Regalo 3</button>
+    </div>
+
+    <!-- PANEL 1 -->
+    <div id="panel1" class="tab-panel activa">
+        <p class="scratch-label">✨ Raspá para descubrir tu primer regalo ✨</p>
+        <div class="scratch-wrap">
+            <div class="scratch-inner">
+                <a href="https://google.com/2.png" target="_blank" class="btn-regalo">
+                    <span class="badge-regalo">🎀</span>
+                    ¡Abrir mi regalo!
+                </a>
             </div>
-
-            <!-- Solapa 2: Regalo 2 (Enlace) -->
-            <div id="solapa-regalo2" class="contenido-solapa">
-                <p class="instrucciones">👇 Raspá acá abajo para tu Segundo Regalo 👇</p>
-                <div class="contenedor-raspadita">
-                    <div class="contenido-oculto">
-                        <a href="https://google.com/3.png" target="_blank" class="link-regalo">🎁 ¡Tocar para abrir!</a>
-                    </div>
-                    <canvas id="canvasR2" width="260" height="260"></canvas>
-                </div>
-            </div>
-
-            <!-- Solapa 3: Regalo 3 (Foto) -->
-            <div id="solapa-regalo3" class="contenido-solapa">
-                <p class="instrucciones">👇 Raspá acá abajo para tu Tercer Regalo 👇</p>
-                <div class="contenedor-raspadita">
-                    <div class="contenido-oculto">
-                        <img src="1.png" alt="Regalo Sorpresa">
-                    </div>
-                    <canvas id="canvasR3" width="260" height="260"></canvas>
-                </div>
-            </div>
-
+            <canvas class="scratch-canvas" id="c1" width="270" height="270"></canvas>
         </div>
-
-        <!-- BARRA DE SOLAPAS INFERIORES -->
-        <div class="pestanas-navegacion">
-            <button class="boton-pestana activa" onclick="cambiarSolapa(event, 'solapa-regalo1')">REGALO 1</button>
-            <button class="boton-pestana" onclick="cambiarSolapa(event, 'solapa-regalo2')">REGALO 2</button>
-            <button class="boton-pestana" onclick="cambiarSolapa(event, 'solapa-regalo3')">REGALO 3</button>
+        <div class="scratch-progress-wrap">
+            <div class="scratch-progress-bar" id="prog1"></div>
         </div>
     </div>
 
+    <!-- PANEL 2 -->
+    <div id="panel2" class="tab-panel">
+        <p class="scratch-label">✨ Raspá para descubrir tu segundo regalo ✨</p>
+        <div class="scratch-wrap">
+            <div class="scratch-inner">
+                <a href="https://google.com/3.png" target="_blank" class="btn-regalo">
+                    <span class="badge-regalo">💝</span>
+                    ¡Abrir mi regalo!
+                </a>
+            </div>
+            <canvas class="scratch-canvas" id="c2" width="270" height="270"></canvas>
+        </div>
+        <div class="scratch-progress-wrap">
+            <div class="scratch-progress-bar" id="prog2"></div>
+        </div>
+    </div>
+
+    <!-- PANEL 3 -->
+    <div id="panel3" class="tab-panel">
+        <p class="scratch-label">✨ Raspá para descubrir tu tercer regalo ✨</p>
+        <div class="scratch-wrap">
+            <div class="scratch-inner">
+                <img src="1.png" alt="Sorpresa">
+            </div>
+            <canvas class="scratch-canvas" id="c3" width="270" height="270"></canvas>
+        </div>
+        <div class="scratch-progress-wrap">
+            <div class="scratch-progress-bar" id="prog3"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="card-footer">
+        <p class="footer-text">Con todo el cariño del mundo 💜 — que sea un día increíble</p>
+    </div>
+</div>
+
 <script>
-    /* --- REPRODUCTOR DE MÚSICA --- */
-    const musica = document.getElementById('musicaFondo');
-    const btnAudio = document.getElementById('btnAudio');
+/* ═══════════════════════════════════════
+   PARTÍCULAS DE FONDO
+═══════════════════════════════════════ */
+(function () {
+    const cvs = document.getElementById('canvas-bg');
+    const ctx = cvs.getContext('2d');
+    const COLORS = ['#f9c4d4','#dac8f0','#b8e8d4','#ffd4b2','#fef0a8','#c0dff4'];
+    let W, H, particles = [];
 
-    function toggleMúsica() {
-        if (musica.paused) {
-            musica.play();
-            btnAudio.innerText = "⏸ Pausar";
-        } else {
-            musica.pause();
-            btnAudio.innerText = "▶ Reproducir";
-        }
+    function resize() {
+        W = cvs.width  = window.innerWidth;
+        H = cvs.height = window.innerHeight;
     }
+    window.addEventListener('resize', resize);
+    resize();
 
-    /* --- LÓGICA DE INTERCAMBIO DE SOLAPAS --- */
-    function cambiarSolapa(evento, idSolapa) {
-        const contenidos = document.querySelectorAll('.contenido-solapa');
-        contenidos.forEach(solapa => solapa.classList.remove('activa'));
+    const SHAPES = ['circle','square','triangle','star','heart'];
 
-        const botones = document.querySelectorAll('.boton-pestana');
-        botones.forEach(btn => btn.classList.remove('activa'));
-
-        document.getElementById(idSolapa).classList.add('activa');
-        evento.currentTarget.classList.add('activa');
-    }
-
-    /* --- DECORACIONES FLOTANTES (Globos y Confeti) --- */
-    const decoracionContainer = document.getElementById('decoracion');
-    const colores = ['#f8a5c2', '#f7d794', '#f78fb3', '#e77f67', '#63cdda', '#78e08f'];
-
-    function crearDecoraciones() {
-        for (let i = 0; i < 8; i++) {
-            let globo = document.createElement('div');
-            globo.classList.add('globo');
-            globo.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
-            globo.style.left = Math.random() * 90 + 'vw';
-            globo.style.animationDelay = Math.random() * 8 + 's';
-            globo.style.transform = `scale(${Math.random() * 0.3 + 0.7})`;
-            decoracionContainer.appendChild(globo);
+    class Particle {
+        constructor() { this.reset(true); }
+        reset(init) {
+            this.x     = Math.random() * W;
+            this.y     = init ? Math.random() * H : -20;
+            this.r     = Math.random() * 9 + 4;
+            this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+            this.speed = Math.random() * 1.2 + 0.4;
+            this.drift = (Math.random() - 0.5) * 0.6;
+            this.rot   = Math.random() * Math.PI * 2;
+            this.rotV  = (Math.random() - 0.5) * 0.04;
+            this.shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+            this.alpha = Math.random() * 0.5 + 0.25;
         }
-        for (let i = 0; i < 20; i++) {
-            let confeti = document.createElement('div');
-            confeti.classList.add('confeti');
-            confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
-            confeti.style.left = Math.random() * 100 + 'vw';
-            confeti.style.animationDelay = Math.random() * 5 + 's';
-            if(Math.random() > 0.5) confeti.style.borderRadius = '50%';
-            decoracionContainer.appendChild(confeti);
-        }
-    }
-    crearDecoraciones();
-
-    /* --- LÓGICA DE LA RASPADITA DIGITAL (REUTILIZABLE) --- */
-    function inicializarRaspadita(canvasId) {
-        const canvas = document.getElementById(canvasId);
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        let rasgando = false;
-
-        // Dibujar el recubrimiento
-        ctx.fillStyle = '#e3d7bf'; 
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.fillStyle = 'rgba(255,255,255,0.25)';
-        for (let i = 0; i < canvas.width; i += 8) {
-            for (let j = 0; j < canvas.height; j += 8) {
-                ctx.fillRect(i, j, 2, 2);
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.fillStyle   = this.color;
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rot);
+            const r = this.r;
+            if (this.shape === 'circle') {
+                ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI*2); ctx.fill();
+            } else if (this.shape === 'square') {
+                ctx.fillRect(-r, -r, r*2, r*2);
+            } else if (this.shape === 'triangle') {
+                ctx.beginPath();
+                ctx.moveTo(0, -r); ctx.lineTo(r, r); ctx.lineTo(-r, r);
+                ctx.closePath(); ctx.fill();
+            } else if (this.shape === 'star') {
+                ctx.beginPath();
+                for (let i = 0; i < 5; i++) {
+                    const a1 = (i * 4 * Math.PI) / 5 - Math.PI/2;
+                    const a2 = ((i * 4 + 2) * Math.PI) / 5 - Math.PI/2;
+                    if (i === 0) ctx.moveTo(Math.cos(a1)*r, Math.sin(a1)*r);
+                    else ctx.lineTo(Math.cos(a1)*r, Math.sin(a1)*r);
+                    ctx.lineTo(Math.cos(a2)*r*0.45, Math.sin(a2)*r*0.45);
+                }
+                ctx.closePath(); ctx.fill();
+            } else { // heart
+                ctx.beginPath();
+                ctx.moveTo(0, r*0.4);
+                ctx.bezierCurveTo(-r, -r*0.2, -r*1.5, r*0.8, 0, r*1.4);
+                ctx.bezierCurveTo(r*1.5, r*0.8, r, -r*0.2, 0, r*0.4);
+                ctx.fill();
             }
+            ctx.restore();
         }
-
-        ctx.fillStyle = '#7a6b52';
-        ctx.font = 'bold 20px "Nunito", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('RASPÁ ACÁ 🎁', 130, 135);
-
-        ctx.globalCompositeOperation = 'destination-out';
-
-        function obtenerPosicion(e) {
-            const rect = canvas.getBoundingClientRect();
-            const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
-            return {
-                x: clienteX - rect.left,
-                y: clienteY - rect.top
-            };
-        }
-
-        function empezar(e) { 
-            rasgando = true; 
-            raspar(e); 
-        }
-        
-        function terminar() { 
-            rasgando = false; 
-            ctx.beginPath(); 
-            verificarProgreso(canvas, ctx);
-        }
-
-        function raspar(e) {
-            if (!rasgando) return;
-            e.preventDefault();
-            const pos = obtenerPosicion(e);
-            
-            ctx.lineWidth = 35;
-            ctx.lineCap = 'round';
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        }
-
-        canvas.addEventListener('mousedown', empezar);
-        canvas.addEventListener('mouseup', terminar);
-        canvas.addEventListener('mousemove', raspar);
-
-        canvas.addEventListener('touchstart', empezar);
-        canvas.addEventListener('touchend', terminar);
-        canvas.addEventListener('touchmove', raspar);
-    }
-
-    /* Calcular cuánto se raspó para revelar y permitir clic */
-    function verificarProgreso(canvas, ctx) {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        let pixelsBorrados = 0;
-        const totalPixeles = imageData.data.length / 4;
-        
-        for (let i = 3; i < imageData.data.length; i += 4) {
-            if (imageData.data[i] === 0) pixelsBorrados++;
-        }
-        
-        // Si raspó más del 40%, ocultar el canvas por completo para poder hacer clic
-        if (pixelsBorrados / totalPixeles > 0.40) {
-            canvas.style.transition = 'opacity 0.5s ease';
-            canvas.style.opacity = '0';
-            setTimeout(() => {
-                canvas.style.display = 'none';
-            }, 500);
+        update() {
+            this.y   += this.speed;
+            this.x   += this.drift;
+            this.rot += this.rotV;
+            if (this.y > H + 20) this.reset(false);
         }
     }
 
-    // Inicializar las 3 raspaditas
-    inicializarRaspadita('canvasR1');
-    inicializarRaspadita('canvasR2');
-    inicializarRaspadita('canvasR3');
+    for (let i = 0; i < 55; i++) particles.push(new Particle());
 
+    (function loop() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(loop);
+    })();
+})();
+
+/* ═══════════════════════════════════════
+   AUDIO
+═══════════════════════════════════════ */
+const musica  = document.getElementById('musicaFondo');
+const btnAudio = document.getElementById('btnAudio');
+
+function toggleMusica() {
+    if (musica.paused) {
+        musica.play();
+        btnAudio.textContent = '⏸ Pausar';
+    } else {
+        musica.pause();
+        btnAudio.textContent = '▶ Reproducir';
+    }
+}
+
+/* ═══════════════════════════════════════
+   TABS
+═══════════════════════════════════════ */
+function cambiarTab(e, id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('activa'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activa'));
+    document.getElementById(id).classList.add('activa');
+    e.currentTarget.classList.add('activa');
+}
+
+/* ═══════════════════════════════════════
+   RASPADITA REUTILIZABLE
+═══════════════════════════════════════ */
+function initScratch(canvasId, progressId) {
+    const canvas = document.getElementById(canvasId);
+    const bar    = document.getElementById(progressId);
+    const ctx    = canvas.getContext('2d', { willReadFrequently: true });
+    const W = canvas.width, H = canvas.height;
+    let   painting = false;
+
+    // ── Pintar la capa superior con gradiente pastel ──
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0,   '#dac8f0');
+    grad.addColorStop(0.35,'#f9c4d4');
+    grad.addColorStop(0.7, '#b8e8d4');
+    grad.addColorStop(1,   '#c0dff4');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Patrón de puntos suave
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    for (let x = 12; x < W; x += 22)
+        for (let y = 12; y < H; y += 22)
+            { ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill(); }
+
+    // Texto central
+    ctx.fillStyle  = 'rgba(100, 70, 130, 0.75)';
+    ctx.font       = 'bold 17px "Quicksand", sans-serif';
+    ctx.textAlign  = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('✦ RASPÁ AQUÍ ✦', W/2, H/2 - 14);
+    ctx.font = '28px sans-serif';
+    ctx.fillText('🎁', W/2, H/2 + 22);
+
+    ctx.globalCompositeOperation = 'destination-out';
+
+    function pos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const src  = e.touches ? e.touches[0] : e;
+        return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+    }
+
+    function scratch(e) {
+        if (!painting) return;
+        e.preventDefault();
+        const p = pos(e);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 22, 0, Math.PI * 2);
+        ctx.fill();
+        checkProgress();
+    }
+
+    function checkProgress() {
+        const data  = ctx.getImageData(0, 0, W, H).data;
+        let cleared = 0;
+        for (let i = 3; i < data.length; i += 4)
+            if (data[i] === 0) cleared++;
+        const pct = cleared / (W * H);
+        if (bar) bar.style.width = Math.min(pct * 100 * 1.6, 100) + '%';
+        if (pct > 0.40) reveal();
+    }
+
+    function reveal() {
+        canvas.style.transition = 'opacity 0.6s ease';
+        canvas.style.opacity    = '0';
+        setTimeout(() => { canvas.style.display = 'none'; }, 650);
+    }
+
+    canvas.addEventListener('mousedown',  (e) => { painting = true; scratch(e); });
+    canvas.addEventListener('mouseup',    ()  => { painting = false; ctx.beginPath(); });
+    canvas.addEventListener('mouseleave', ()  => { painting = false; ctx.beginPath(); });
+    canvas.addEventListener('mousemove',  scratch);
+    canvas.addEventListener('touchstart', (e) => { painting = true; scratch(e); }, { passive: false });
+    canvas.addEventListener('touchend',   ()  => { painting = false; ctx.beginPath(); });
+    canvas.addEventListener('touchmove',  scratch, { passive: false });
+}
+
+initScratch('c1', 'prog1');
+initScratch('c2', 'prog2');
+initScratch('c3', 'prog3');
 </script>
-
 </body>
 </html>
