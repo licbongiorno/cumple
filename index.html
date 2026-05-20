@@ -1,1 +1,276 @@
-probando
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños Cairto!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #fcf8f2;
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* --- EFECTOS FLOTANTES (Globos y Confeti) --- */
+        .decoracion-flotante {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* Para que no molesten al hacer click o raspar */
+            z-index: 1;
+        }
+
+        .globo {
+            position: absolute;
+            bottom: -150px;
+            width: 50px;
+            height: 65px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            animation: flotar Arriba 12s linear infinite;
+            opacity: 0.8;
+        }
+        /* Hilo del globo */
+        .globo::after {
+            content: "";
+            position: absolute;
+            bottom: -12px; left: 24px;
+            width: 2px; height: 12px;
+            background-color: #999;
+        }
+
+        .confeti {
+            position: absolute;
+            top: -20px;
+            width: 10px;
+            height: 10px;
+            animation: caer diagonal 8s linear infinite;
+        }
+
+        @keyframes flotarArriba {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); }
+            50% { transform: translateY(-60vh) translateX(30px) rotate(8deg); }
+            100% { transform: translateY(-120vh) translateX(-20px) rotate(-5deg); }
+        }
+
+        @keyframes caer {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* --- ESTILO DIARIO / BITÁCORA --- */
+        .diario-contenedor {
+            background: #fffdf9;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #e6dfd3;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(163, 145, 117, 0.2);
+            padding: 30px 25px;
+            position: relative;
+            z-index: 10; /* Por encima de los globos de fondo */
+            border-left: 15px solid #e0cda9; /* Simula el lomo del diario */
+        }
+
+        /* Líneas de cuaderno simulación opcional */
+        .diario-contenido {
+            background-image: linear-gradient(#e1effa 1px, transparent 1px);
+            background-size: 100% 28px;
+            line-height: 28px;
+            padding-top: 5px;
+        }
+
+        h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 2.8rem;
+            color: #d45d79;
+            text-align: center;
+            line-height: 1.2;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        p.dedicatoria {
+            font-family: 'Caveat', cursive;
+            font-size: 1.6rem;
+            color: #555;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* --- ZONA DE LA RASPADITA --- */
+        .instrucciones {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contenedor-raspadita {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+            user-select: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .contenido-oculto {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            background: #fdfbf7;
+            box-sizing: border-box;
+        }
+
+        .contenido-oculto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ajusta la imagen 1.png al recuadro */
+        }
+
+        canvas {
+            position: absolute;
+            top: 0; left: 0;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="%23d45d79"/></svg>'), auto;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="decoracion-flotante" id="decoracion"></div>
+
+    <div class="diario-contenedor">
+        <div class="diario-contenido">
+            <h1>¡Feliz Cumpleaños Cairto! 🎂</h1>
+            <p class="dedicatoria">
+                Hoy es un día muy especial y preparé esta bitácora digital para vos. 
+                Dejaste una sorpresa guardada acá abajo... ¡Tenés que raspar la tarjeta para descubrir tu regalo! ✨
+            </p>
+            
+            <p class="instrucciones">👇 Raspá acá abajo con el dedo o mouse 👇</p>
+            
+            <div class="contenedor-raspadita">
+                <div class="contenido-oculto">
+                    <img src="1.png" alt="Regalo Sorpresa de Cumpleaños">
+                </div>
+                <canvas id="canvasRaspadita" width="280" height="280"></canvas>
+            </div>
+        </div>
+    </div>
+
+<script>
+    /* --- GENERADOR DE GLOBOS Y CONFETI --- */
+    const decoracionContainer = document.getElementById('decoracion');
+    const colores = ['#f8a5c2', '#f7d794', '#f78fb3', '#e77f67', '#63cdda', '#78e08f'];
+
+    function crearDecoraciones() {
+        // Generar 8 globos en posiciones aleatorias
+        for (let i = 0; i < 8; i++) {
+            let globo = document.createElement('div');
+            globo.classList.add('globo');
+            globo.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+            globo.style.left = Math.random() * 90 + 'vw';
+            globo.style.animationDelay = Math.random() * 8 + 's';
+            globo.style.transform = `scale(${Math.random() * 0.4 + 0.7})`;
+            decoracionContainer.appendChild(globo);
+        }
+
+        // Generar 20 papelitos de confeti
+        for (let i = 0; i < 20; i++) {
+            let confeti = document.createElement('div');
+            confeti.classList.add('confeti');
+            confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+            confeti.style.left = Math.random() * 100 + 'vw';
+            confeti.style.animationDelay = Math.random() * 5 + 's';
+            // Formas aleatorias (cuadrados o círculos)
+            if(Math.random() > 0.5) confeti.style.borderRadius = '50%';
+            decoracionContainer.appendChild(confeti);
+        }
+    }
+    crearDecoraciones();
+
+    /* --- LÓGICA DE LA RASPADITA DIGITAL --- */
+    const canvas = document.getElementById('canvasRaspadita');
+    const ctx = canvas.getContext('2d');
+    let rasgando = false;
+
+    // Dibujar la capa superior (Estilo raspadita clásica dorada/rosada suave)
+    ctx.fillStyle = '#e3d7bf'; 
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Agregar un patrón de puntitos blancos para textura de raspadita
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    for (let i = 0; i < canvas.width; i += 8) {
+        for (let j = 0; j < canvas.height; j += 8) {
+            ctx.fillRect(i, j, 2, 2);
+        }
+    }
+
+    // Texto frontal sobre la raspadita
+    ctx.fillStyle = '#7a6b52';
+    ctx.font = 'bold 22px "Nunito", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('RASPÁ ACÁ 🎁', 140, 145);
+
+    // Activamos el modo "Goma de borrar"
+    ctx.globalCompositeOperation = 'destination-out';
+
+    function obtenerPosicion(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+            x: clienteX - rect.left,
+            y: clienteY - rect.top
+        };
+    }
+
+    function empezar(e) { rasgando = true; raspar(e); }
+    function terminar() { rasgando = false; ctx.beginPath(); }
+
+    function raspar(e) {
+        if (!rasgando) return;
+        e.preventDefault(); // Evita scroll molesto en celulares
+        const pos = obtenerPosicion(e);
+        
+        ctx.lineWidth = 35; // Grosor del raspado (perfecto para dedos)
+        ctx.lineCap = 'round';
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+
+    // Eventos Mouse (Escritorio)
+    canvas.addEventListener('mousedown', empezar);
+    canvas.addEventListener('mouseup', terminar);
+    canvas.addEventListener('mousemove', raspar);
+
+    // Eventos Touch (Pantallas táctiles / Celulares)
+    canvas.addEventListener('touchstart', empezar);
+    canvas.addEventListener('touchend', terminar);
+    canvas.addEventListener('touchmove', raspar);
+</script>
+
+</body>
+</html>
