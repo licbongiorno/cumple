@@ -3,611 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Feliz Cumpleaños Cairto!</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
-
+    <title>Web en Construcción - Sistema Activo</title>
     <style>
-        :root {
-            --blush:    #f9c4d4;
-            --lavender: #dac8f0;
-            --mint:     #b8e8d4;
-            --peach:    #ffd4b2;
-            --butter:   #fef0a8;
-            --sky:      #c0dff4;
-            --rose:     #e8738a;
-            --plum:     #7c5c8a;
-            --sage:     #78b09a;
-            --cream:    #fefaf6;
-            --line:     #ebe3f8;
-            --card-bg:  #ffffff;
-            --shadow:   rgba(200,168,224,0.25);
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            background: linear-gradient(145deg, #fdf4ff 0%, #f0f8ff 50%, #fff5f7 100%);
-            font-family: 'Quicksand', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            overflow-x: hidden;
-            padding: 24px 12px 40px;
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            color: #00ff41;
         }
 
-        /* ── CANVAS DE PARTÍCULAS ── */
-        #canvas-bg {
-            position: fixed;
-            inset: 0;
+        /* Capa 1: Lluvia Matrix */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Capa 2: Filtro de monitor CRT (Scanlines y Viñeta) */
+        .crt-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
             pointer-events: none;
-            z-index: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
         }
 
-        /* ── BOTÓN AUDIO ── */
-        .btn-audio {
-            position: fixed;
-            top: 14px; right: 14px;
-            background: linear-gradient(135deg, var(--rose), #c9566e);
-            color: #fff;
-            border: none;
-            padding: 9px 18px;
-            border-radius: 30px;
-            font-family: 'Quicksand', sans-serif;
-            font-weight: 700;
-            font-size: 0.82rem;
-            cursor: pointer;
-            z-index: 200;
-            box-shadow: 0 4px 16px rgba(232,115,138,0.45);
-            transition: transform 0.2s, box-shadow 0.2s;
-            letter-spacing: 0.5px;
-        }
-        .btn-audio:hover { transform: scale(1.06); box-shadow: 0 6px 22px rgba(232,115,138,0.55); }
-
-        /* ── CARD PRINCIPAL ── */
-        .card {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 460px;
-            background: var(--card-bg);
-            border-radius: 24px;
-            box-shadow:
-                0 2px 0 var(--blush),
-                0 6px 30px var(--shadow),
-                0 0 0 1px rgba(218,200,240,0.5);
-            overflow: hidden;
-            animation: cardIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
-        }
-
-        @keyframes cardIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.96); }
-            to   { opacity: 1; transform: translateY(0)   scale(1); }
-        }
-
-        /* ── HEADER BANNER ── */
-        .header-banner {
-            background: linear-gradient(135deg, #fce4ec 0%, #ede7f6 50%, #e3f2fd 100%);
-            padding: 32px 28px 26px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header-banner::before {
-            content: '';
+        /* Capa 3: Contenedor 3D */
+        .scene3d {
             position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 60% 40% at 20% 30%, rgba(249,196,212,0.6) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 35% at 80% 70%, rgba(193,216,244,0.5) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 50% at 50% 10%, rgba(218,200,240,0.4) 0%, transparent 70%);
-        }
-
-        .header-emojis {
-            font-size: 2rem;
-            display: block;
-            margin-bottom: 6px;
-            position: relative;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50%       { transform: translateY(-5px); }
-        }
-
-        h1 {
-            font-family: 'Pacifico', cursive;
-            font-size: clamp(1.7rem, 5vw, 2.3rem);
-            color: var(--rose);
-            line-height: 1.25;
-            position: relative;
-            text-shadow: 2px 3px 0 rgba(232,115,138,0.15);
-        }
-
-        .subtitulo {
-            font-family: 'Caveat', cursive;
-            font-size: 1.25rem;
-            color: var(--plum);
-            margin-top: 8px;
-            position: relative;
-            opacity: 0.85;
-            line-height: 1.4;
-        }
-
-        /* ── SEPARADOR ONDULADO ── */
-        .wave-divider {
-            display: block;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 28px;
-            margin-top: -1px;
-        }
-
-        /* ── TABS ── */
-        .tabs-bar {
+            height: 100%;
             display: flex;
-            background: #fdf6ff;
-            border-bottom: 2px solid var(--line);
-        }
-
-        .tab-btn {
-            flex: 1;
-            background: none;
-            border: none;
-            padding: 14px 4px 11px;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: #b4a0c8;
-            cursor: pointer;
-            outline: none;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            transition: color 0.2s, background 0.2s;
-            border-bottom: 3px solid transparent;
-            position: relative;
-            bottom: -2px;
-        }
-
-        .tab-btn:not(:last-child) { border-right: 1px solid var(--line); }
-
-        .tab-btn.activa {
-            color: var(--rose);
-            background: #fff;
-            border-bottom-color: var(--rose);
-        }
-
-        /* ── PANEL DE SOLAPA ── */
-        .tab-panel {
-            display: none;
-            padding: 24px 20px 28px;
-            animation: fadeSlide 0.35s ease both;
-            background: var(--card-bg);
-        }
-
-        .tab-panel.activa { display: block; }
-
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ── RASPADITA ── */
-        .scratch-label {
-            text-align: center;
-            font-size: 0.72rem;
-            color: #c0aad8;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 14px;
-            font-weight: 700;
-        }
-
-        .scratch-wrap {
-            position: relative;
-            width: 270px;
-            height: 270px;
-            margin: 0 auto;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow:
-                0 0 0 4px #fff,
-                0 0 0 6px var(--lavender),
-                0 8px 28px var(--shadow);
-        }
-
-        .scratch-inner {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            gap: 12px;
-            padding: 24px;
-            background: linear-gradient(135deg, #fff5fb 0%, #f0eaff 100%);
+            z-index: 3;
+            perspective: 800px;
         }
 
-        .scratch-inner img {
+        /* Objeto flotante y rotatorio */
+        .hologram-container {
+            position: relative;
+            transform-style: preserve-3d;
+            animation: floatAndRotate 12s ease-in-out infinite alternate;
+        }
+
+        /* Texto 3D con efecto Glitch */
+        .text-glitch {
+            position: relative;
+            font-size: 5rem;
+            font-weight: bold;
+            color: #fff;
+            text-transform: uppercase;
+            text-align: center;
+            white-space: nowrap;
+            letter-spacing: 5px;
+            text-shadow: 
+                0 0 10px #00ff41,
+                0 0 20px #00ff41,
+                -3px 0px 5px rgba(255,0,0,0.7),
+                3px 0px 5px rgba(0,0,255,0.7);
+            animation: pulseNeon 2s infinite;
+        }
+
+        /* Pseudo-elementos para el Glitch */
+        .text-glitch::before, .text-glitch::after {
+            content: "WEB EN CONSTRUCCIÓN";
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            background: #050505;
+        }
+
+        .text-glitch::before {
+            left: 3px;
+            text-shadow: -2px 0 red;
+            animation: glitch-anim-1 3s infinite linear alternate-reverse;
+        }
+
+        .text-glitch::after {
+            left: -3px;
+            text-shadow: -2px 0 blue;
+            animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+        }
+
+        /* Capa 4: Terminal de consola inferior */
+        .terminal {
             position: absolute;
-            inset: 0;
+            bottom: 30px;
+            left: 30px;
+            z-index: 4;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px #00ff41;
         }
 
-        .btn-regalo {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--rose) 0%, #c9566e 100%);
-            color: #fff;
-            text-decoration: none;
-            padding: 13px 24px;
-            border-radius: 40px;
-            font-family: 'Quicksand', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            box-shadow: 0 4px 16px rgba(232,115,138,0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-            letter-spacing: 0.3px;
-        }
-
-        .btn-regalo:hover { transform: scale(1.05); box-shadow: 0 6px 24px rgba(232,115,138,0.55); }
-
-        .badge-regalo {
+        .cursor {
             display: inline-block;
-            background: rgba(255,255,255,0.25);
-            border-radius: 50%;
-            width: 28px; height: 28px;
-            line-height: 28px;
-            font-size: 1.1rem;
+            width: 10px;
+            height: 1.2rem;
+            background-color: #00ff41;
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
+            margin-left: 5px;
         }
 
-        .scratch-canvas {
-            position: absolute;
-            inset: 0;
-            touch-action: none;
-            cursor: crosshair;
-            border-radius: 20px;
+        /* Animaciones */
+        @keyframes floatAndRotate {
+            0% { transform: rotateY(-20deg) rotateX(10deg) translateY(0px); }
+            50% { transform: rotateY(20deg) rotateX(-5deg) translateY(-20px); }
+            100% { transform: rotateY(-20deg) rotateX(10deg) translateY(0px); }
         }
 
-        /* ── PROGRESS BAR RASPADITA ── */
-        .scratch-progress-wrap {
-            width: 270px;
-            margin: 10px auto 0;
-            height: 6px;
-            background: var(--line);
-            border-radius: 10px;
-            overflow: hidden;
+        @keyframes pulseNeon {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, -3px 0px 5px rgba(255,0,0,0.7), 3px 0px 5px rgba(0,0,255,0.7); }
+            50% { opacity: 0.8; text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41, -1px 0px 3px rgba(255,0,0,0.5), 1px 0px 3px rgba(0,0,255,0.5); }
         }
 
-        .scratch-progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--rose), var(--lavender));
-            border-radius: 10px;
-            transition: width 0.15s ease;
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(20% 0 80% 0); }
+            20% { clip-path: inset(60% 0 10% 0); }
+            40% { clip-path: inset(40% 0 50% 0); }
+            60% { clip-path: inset(80% 0 5% 0); }
+            80% { clip-path: inset(10% 0 70% 0); }
+            100% { clip-path: inset(30% 0 50% 0); }
         }
 
-        /* ── FOOTER ── */
-        .card-footer {
-            background: linear-gradient(135deg, #fce4ec 0%, #ede7f6 100%);
-            padding: 16px 24px;
-            text-align: center;
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(10% 0 60% 0); }
+            20% { clip-path: inset(30% 0 20% 0); }
+            40% { clip-path: inset(70% 0 10% 0); }
+            60% { clip-path: inset(20% 0 50% 0); }
+            80% { clip-path: inset(50% 0 30% 0); }
+            100% { clip-path: inset(5% 0 80% 0); }
         }
 
-        .footer-text {
-            font-family: 'Caveat', cursive;
-            font-size: 1.1rem;
-            color: var(--plum);
-            opacity: 0.75;
-        }
-
-        /* ── STICKER LATERAL ── */
-        .sticker-edge {
-            position: absolute;
-            left: -14px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .sticker-dot {
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        @media (max-width: 768px) {
+            .text-glitch { font-size: 2.5rem; }
+            .terminal { font-size: 0.9rem; left: 15px; bottom: 15px; }
         }
     </style>
 </head>
 <body>
 
-<canvas id="canvas-bg"></canvas>
+    <!-- Filtro Monitor Antiguo -->
+    <div class="crt-overlay"></div>
 
-<audio id="musicaFondo" src="1.mp3" loop></audio>
-<button id="btnAudio" class="btn-audio" onclick="toggleMusica()">▶ Reproducir</button>
+    <!-- Fondo de lluvia Matrix mejorado -->
+    <canvas id="matrixCanvas"></canvas>
 
-<div class="card">
-
-    <!-- BANNER SUPERIOR -->
-    <div class="header-banner">
-        <span class="header-emojis">🎀 🎂 🎁 ✨</span>
-        <h1>¡Feliz Cumpleaños<br>Cairto!</h1>
-        <p class="subtitulo">Una bitácora pensada para vos 💕<br>Explorá las solapas para descubrir tus regalos</p>
-    </div>
-
-    <!-- ONDAS DIVISORAS -->
-    <svg class="wave-divider" viewBox="0 0 460 28" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <path d="M0,14 C80,28 160,0 230,14 C300,28 380,0 460,14 L460,0 L0,0 Z"
-              fill="url(#waveGradient)"/>
-        <defs>
-            <linearGradient id="waveGradient" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%"   stop-color="#fce4ec"/>
-                <stop offset="50%"  stop-color="#ede7f6"/>
-                <stop offset="100%" stop-color="#e3f2fd"/>
-            </linearGradient>
-        </defs>
-    </svg>
-
-    <!-- TABS -->
-    <div class="tabs-bar">
-        <button class="tab-btn activa" onclick="cambiarTab(event,'panel1')">🎁 Regalo 1</button>
-        <button class="tab-btn"        onclick="cambiarTab(event,'panel2')">🎁 Regalo 2</button>
-        <button class="tab-btn"        onclick="cambiarTab(event,'panel3')">🎁 Regalo 3</button>
-    </div>
-
-    <!-- PANEL 1 -->
-    <div id="panel1" class="tab-panel activa">
-        <p class="scratch-label">✨ Raspá para descubrir tu primer regalo ✨</p>
-        <div class="scratch-wrap">
-            <div class="scratch-inner">
-                <a href="https://google.com/2.png" target="_blank" class="btn-regalo">
-                    <span class="badge-regalo">🎀</span>
-                    ¡Abrir mi regalo!
-                </a>
-            </div>
-            <canvas class="scratch-canvas" id="c1" width="270" height="270"></canvas>
-        </div>
-        <div class="scratch-progress-wrap">
-            <div class="scratch-progress-bar" id="prog1"></div>
+    <!-- Holograma 3D con Glitch -->
+    <div class="scene3d">
+        <div class="hologram-container">
+            <h1 class="text-glitch" data-text="WEB EN CONSTRUCCIÓN">WEB EN CONSTRUCCIÓN</h1>
         </div>
     </div>
 
-    <!-- PANEL 2 -->
-    <div id="panel2" class="tab-panel">
-        <p class="scratch-label">✨ Raspá para descubrir tu segundo regalo ✨</p>
-        <div class="scratch-wrap">
-            <div class="scratch-inner">
-                <a href="https://google.com/3.png" target="_blank" class="btn-regalo">
-                    <span class="badge-regalo">💝</span>
-                    ¡Abrir mi regalo!
-                </a>
-            </div>
-            <canvas class="scratch-canvas" id="c2" width="270" height="270"></canvas>
-        </div>
-        <div class="scratch-progress-wrap">
-            <div class="scratch-progress-bar" id="prog2"></div>
-        </div>
+    <!-- Terminal de comandos -->
+    <div class="terminal">
+        <span id="typewriter"></span><span class="cursor"></span>
     </div>
 
-    <!-- PANEL 3 -->
-    <div id="panel3" class="tab-panel">
-        <p class="scratch-label">✨ Raspá para descubrir tu tercer regalo ✨</p>
-        <div class="scratch-wrap">
-            <div class="scratch-inner">
-                <img src="1.png" alt="Sorpresa">
-            </div>
-            <canvas class="scratch-canvas" id="c3" width="270" height="270"></canvas>
-        </div>
-        <div class="scratch-progress-wrap">
-            <div class="scratch-progress-bar" id="prog3"></div>
-        </div>
-    </div>
+    <script>
+        // --- 1. EFECTO MATRIX AVANZADO ---
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
 
-    <!-- FOOTER -->
-    <div class="card-footer">
-        <p class="footer-text">Con todo el cariño del mundo 💜 — que sea un día increíble</p>
-    </div>
-</div>
-
-<script>
-/* ═══════════════════════════════════════
-   PARTÍCULAS DE FONDO
-═══════════════════════════════════════ */
-(function () {
-    const cvs = document.getElementById('canvas-bg');
-    const ctx = cvs.getContext('2d');
-    const COLORS = ['#f9c4d4','#dac8f0','#b8e8d4','#ffd4b2','#fef0a8','#c0dff4'];
-    let W, H, particles = [];
-
-    function resize() {
-        W = cvs.width  = window.innerWidth;
-        H = cvs.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const SHAPES = ['circle','square','triangle','star','heart'];
-
-    class Particle {
-        constructor() { this.reset(true); }
-        reset(init) {
-            this.x     = Math.random() * W;
-            this.y     = init ? Math.random() * H : -20;
-            this.r     = Math.random() * 9 + 4;
-            this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
-            this.speed = Math.random() * 1.2 + 0.4;
-            this.drift = (Math.random() - 0.5) * 0.6;
-            this.rot   = Math.random() * Math.PI * 2;
-            this.rotV  = (Math.random() - 0.5) * 0.04;
-            this.shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
-            this.alpha = Math.random() * 0.5 + 0.25;
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
-        draw() {
-            ctx.save();
-            ctx.globalAlpha = this.alpha;
-            ctx.fillStyle   = this.color;
-            ctx.translate(this.x, this.y);
-            ctx.rotate(this.rot);
-            const r = this.r;
-            if (this.shape === 'circle') {
-                ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI*2); ctx.fill();
-            } else if (this.shape === 'square') {
-                ctx.fillRect(-r, -r, r*2, r*2);
-            } else if (this.shape === 'triangle') {
-                ctx.beginPath();
-                ctx.moveTo(0, -r); ctx.lineTo(r, r); ctx.lineTo(-r, r);
-                ctx.closePath(); ctx.fill();
-            } else if (this.shape === 'star') {
-                ctx.beginPath();
-                for (let i = 0; i < 5; i++) {
-                    const a1 = (i * 4 * Math.PI) / 5 - Math.PI/2;
-                    const a2 = ((i * 4 + 2) * Math.PI) / 5 - Math.PI/2;
-                    if (i === 0) ctx.moveTo(Math.cos(a1)*r, Math.sin(a1)*r);
-                    else ctx.lineTo(Math.cos(a1)*r, Math.sin(a1)*r);
-                    ctx.lineTo(Math.cos(a2)*r*0.45, Math.sin(a2)*r*0.45);
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const matrixChars = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789<>-_=+*[]{}";
+        const fontSize = 18;
+        let columns = Math.floor(canvas.width / fontSize);
+        const rainDrops = [];
+
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = Math.random() * -100;
+        }
+
+        function drawMatrix() {
+            // Fondo con opacidad para el rastro
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = fontSize + 'px "Share Tech Mono"';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                const x = i * fontSize;
+                const y = rainDrops[i] * fontSize;
+
+                // Cabecera brillante (blanca) y cola verde
+                if (Math.random() > 0.8) {
+                    ctx.fillStyle = '#ffffff'; // Destello blanco aleatorio
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#ffffff';
+                } else {
+                    ctx.fillStyle = '#00ff41'; // Verde matriz
+                    ctx.shadowBlur = 5;
+                    ctx.shadowColor = '#00ff41';
                 }
-                ctx.closePath(); ctx.fill();
-            } else { // heart
-                ctx.beginPath();
-                ctx.moveTo(0, r*0.4);
-                ctx.bezierCurveTo(-r, -r*0.2, -r*1.5, r*0.8, 0, r*1.4);
-                ctx.bezierCurveTo(r*1.5, r*0.8, r, -r*0.2, 0, r*0.4);
-                ctx.fill();
+
+                ctx.fillText(text, x, y);
+                ctx.shadowBlur = 0; // Resetear sombra para no sobrecargar el rendimiento
+
+                if (y > canvas.height && Math.random() > 0.95) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
             }
-            ctx.restore();
+            requestAnimationFrame(drawMatrix); // Uso de requestAnimationFrame para mayor fluidez
         }
-        update() {
-            this.y   += this.speed;
-            this.x   += this.drift;
-            this.rot += this.rotV;
-            if (this.y > H + 20) this.reset(false);
+        drawMatrix();
+
+        // --- 2. EFECTO MÁQUINA DE ESCRIBIR (TERMINAL) ---
+        const texts = [
+            "> Iniciando secuencias de servidor...",
+            "> Estableciendo conexión segura...",
+            "> Cargando módulos de interfaz...",
+            "> Estado del proyecto: EN DESARROLLO.",
+            "> Por favor, regrese más tarde_"
+        ];
+        
+        let textIndex = 0;
+        let charIndex = 0;
+        const typewriterElement = document.getElementById('typewriter');
+
+        function typeWriter() {
+            if (textIndex < texts.length) {
+                if (charIndex < texts[textIndex].length) {
+                    typewriterElement.innerHTML += texts[textIndex].charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeWriter, Math.random() * 50 + 30); // Velocidad de tipeo variable
+                } else {
+                    setTimeout(eraseText, 2000); // Esperar antes de borrar
+                }
+            } else {
+                textIndex = 0; // Bucle infinito
+                setTimeout(typeWriter, 500);
+            }
         }
-    }
 
-    for (let i = 0; i < 55; i++) particles.push(new Particle());
+        function eraseText() {
+            if (charIndex > 0) {
+                let currentText = texts[textIndex].substring(0, charIndex - 1);
+                typewriterElement.innerHTML = currentText;
+                charIndex--;
+                setTimeout(eraseText, 20); // Velocidad de borrado rápida
+            } else {
+                textIndex++;
+                setTimeout(typeWriter, 500);
+            }
+        }
 
-    (function loop() {
-        ctx.clearRect(0, 0, W, H);
-        particles.forEach(p => { p.update(); p.draw(); });
-        requestAnimationFrame(loop);
-    })();
-})();
-
-/* ═══════════════════════════════════════
-   AUDIO
-═══════════════════════════════════════ */
-const musica  = document.getElementById('musicaFondo');
-const btnAudio = document.getElementById('btnAudio');
-
-function toggleMusica() {
-    if (musica.paused) {
-        musica.play();
-        btnAudio.textContent = '⏸ Pausar';
-    } else {
-        musica.pause();
-        btnAudio.textContent = '▶ Reproducir';
-    }
-}
-
-/* ═══════════════════════════════════════
-   TABS
-═══════════════════════════════════════ */
-function cambiarTab(e, id) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('activa'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activa'));
-    document.getElementById(id).classList.add('activa');
-    e.currentTarget.classList.add('activa');
-}
-
-/* ═══════════════════════════════════════
-   RASPADITA REUTILIZABLE
-═══════════════════════════════════════ */
-function initScratch(canvasId, progressId) {
-    const canvas = document.getElementById(canvasId);
-    const bar    = document.getElementById(progressId);
-    const ctx    = canvas.getContext('2d', { willReadFrequently: true });
-    const W = canvas.width, H = canvas.height;
-    let   painting = false;
-
-    // ── Pintar la capa superior con gradiente pastel ──
-    const grad = ctx.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0,   '#dac8f0');
-    grad.addColorStop(0.35,'#f9c4d4');
-    grad.addColorStop(0.7, '#b8e8d4');
-    grad.addColorStop(1,   '#c0dff4');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
-
-    // Patrón de puntos suave
-    ctx.fillStyle = 'rgba(255,255,255,0.18)';
-    for (let x = 12; x < W; x += 22)
-        for (let y = 12; y < H; y += 22)
-            { ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill(); }
-
-    // Texto central
-    ctx.fillStyle  = 'rgba(100, 70, 130, 0.75)';
-    ctx.font       = 'bold 17px "Quicksand", sans-serif';
-    ctx.textAlign  = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('✦ RASPÁ AQUÍ ✦', W/2, H/2 - 14);
-    ctx.font = '28px sans-serif';
-    ctx.fillText('🎁', W/2, H/2 + 22);
-
-    ctx.globalCompositeOperation = 'destination-out';
-
-    function pos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const src  = e.touches ? e.touches[0] : e;
-        return { x: src.clientX - rect.left, y: src.clientY - rect.top };
-    }
-
-    function scratch(e) {
-        if (!painting) return;
-        e.preventDefault();
-        const p = pos(e);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 22, 0, Math.PI * 2);
-        ctx.fill();
-        checkProgress();
-    }
-
-    function checkProgress() {
-        const data  = ctx.getImageData(0, 0, W, H).data;
-        let cleared = 0;
-        for (let i = 3; i < data.length; i += 4)
-            if (data[i] === 0) cleared++;
-        const pct = cleared / (W * H);
-        if (bar) bar.style.width = Math.min(pct * 100 * 1.6, 100) + '%';
-        if (pct > 0.40) reveal();
-    }
-
-    function reveal() {
-        canvas.style.transition = 'opacity 0.6s ease';
-        canvas.style.opacity    = '0';
-        setTimeout(() => { canvas.style.display = 'none'; }, 650);
-    }
-
-    canvas.addEventListener('mousedown',  (e) => { painting = true; scratch(e); });
-    canvas.addEventListener('mouseup',    ()  => { painting = false; ctx.beginPath(); });
-    canvas.addEventListener('mouseleave', ()  => { painting = false; ctx.beginPath(); });
-    canvas.addEventListener('mousemove',  scratch);
-    canvas.addEventListener('touchstart', (e) => { painting = true; scratch(e); }, { passive: false });
-    canvas.addEventListener('touchend',   ()  => { painting = false; ctx.beginPath(); });
-    canvas.addEventListener('touchmove',  scratch, { passive: false });
-}
-
-initScratch('c1', 'prog1');
-initScratch('c2', 'prog2');
-initScratch('c3', 'prog3');
-</script>
+        // Iniciar la terminal con un pequeño retraso
+        setTimeout(typeWriter, 1000);
+    </script>
 </body>
 </html>
